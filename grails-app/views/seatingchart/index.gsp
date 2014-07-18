@@ -14,7 +14,9 @@
 }
 </style>
     <script type="text/javascript">
-console.log("wee");
+console.log("begin");
+	var students = new Array();
+		
     $( init );
 
     function init() {
@@ -29,7 +31,7 @@ console.log("wee");
 		//$('#seatPile').html('');
 		//$('#studentSlots').html('');
 
-		var numSeats=1;
+		var numSeats=2;
 		
 		for(var i=1; i <= numSeats; i++) {
 			console.warn("i=" + numSeats);
@@ -38,19 +40,21 @@ console.log("wee");
 				hoverClass: 'hovered',
 				drop: handleDropEvent
 			});
+
+			$('<input>').attr({
+				type: 'hidden',
+			    id: 'seatingchartseat' + i,
+			    name: 'seatingchartseat' + i,
+			    value: ''
+			}).appendTo('#seatingChartForm');
 		}
-        
-		var students = new Array();
-	    students[0] = new Array("Sharmeen Ahmed", "0573402");
-	    students[1] = new Array("Stephany Arzaga", "0574254");
-/*
-	    for( var i=1; i <= students.length; i++ ) {
-			$('<div class="student">' + 'wee' + '</div>').data('number', i).appendTo( '#studentSlots' ).droppable( {
-				drop: handleDropEvent
-			} );
-		}*/
-		wee='waa'
-		$('<div id="' + students[0][1] + '" class="student">' + students[0][0] + '</div>').appendTo('#studentSlots').draggable({
+
+        //alert("num hidden ele: " + $('#seatingChartForm input:hidden').length);
+        // 
+	    students[0] = new Array("Sharmeen Ahmed", "123456");
+	    students[1] = new Array("Stephany Arzaga", "987654");
+
+	    $('<div id="' + students[0][1] + '" class="student">' + students[0][0] + '</div>').appendTo('#studentSlots').draggable({
 			containment:'#content',
 			cursor:'move',
 			revert:'invalid'
@@ -60,12 +64,50 @@ console.log("wee");
 
     function handleDropEvent( event, ui ) {
     	var draggable = ui.draggable;
+    	
     	$( this )
-		.addClass( "ui-state-highlight" )
+    	.addClass( "ui-state-highlight" )
 		.find( "p" )
 		.html( "Dropped!" );
-      	alert( 'The square with ID "' + draggable.attr('id') + '" was dropped onto me!' );
+      	//alert( 'The square with ID "' + draggable.attr('id') + '" was dropped onto me!' );
+      	//alert('my id is' + $(this).attr('id'));
+      	//alert('form value: ' + $('#seatingchart.seats(0)').value);
+      	
+      	
+      	// asign studentId to hidden field
+      	var seatNum = $(this).attr('id').replace("seat", "");
+      	var studentId=draggable.attr('id');
+		$('#seatingchartseat' + seatNum).val(studentId);
+		//alert("seat "+ seatNum +": " + $('#seatingchartseat' + seatNum).val());
+		//console.log("student name:" + getStudentNameFromId(studentId));
+		$(this).find("p").html(getStudentNameFromId(studentId));
+		
+		draggable.hide();
     } //handleDropEvent
+
+    function getStudentNameFromId(studentId) {
+	//		console.log("id: " + studentId);
+		//	console.log("students length: " + students.length);
+			for(i=0;i<students.length;i++) {
+			//	console.log(students[i])
+				if(studentId == students[i][1]) {
+					console.log("found match, " + students[i][0] + " " + students[i][1]);
+					return students[i][0];
+				}
+			}
+        }
+
+    function getStudentIdFromName(studentName) {
+	//	console.log("name: " + studentName);
+	//	console.log("students length: " + students.length);
+		for(i=0;i<students.length;i++) {
+		//	console.log(students[i])
+			if(studentName == students[i][0]) {
+				console.log("found match, " + students[i][0] + " " + students[i][1]);
+				return students[i][1];
+			}
+		}
+    }
     </script>
 
      </head>
@@ -73,7 +115,8 @@ console.log("wee");
 
 <div id="content" style="height: 400px; border: 1px solid black;">
 <div id="seatPile" style="border:1px red dashed">
-	<div id="seat1" class="seat"><p>drop here</p></div>
+	<div id="seat1" class="ui-widget-header"><p>drop here</p></div>
+	<div id="seat2" class="ui-widget-header"><p>drop here</p></div>
 </div>
 <br/><br/>
 <div id="studentSlots"></div>
@@ -84,8 +127,10 @@ console.log("wee");
   </div>
 <form name="seatingChartForm" method="post" id="seatingChartForm">
 	<!--  todo: interate of num of seats -->
-	<input type="hidden" name="seatingchart.seats(0)" value=""/>
-</form>    
+	<%--<input type="hidden" id="seatingchartseat1" value="wee"/>
+	<input type="hidden" id="seatingchartseat2" value="wee"/>
+--%></form>    
           <r:layoutResources/>
         </body>
     </html>
+    
