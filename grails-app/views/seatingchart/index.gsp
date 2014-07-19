@@ -1,25 +1,28 @@
 <html>
     <head>
 
-    <title>Simple GSP page</title>
+    <title>Golden Gate University - Seating Chart</title>
 	<r:require modules="jquery-ui"/>
     <r:layoutResources/>   
 <style>
 #makeMeDraggable { width: 300px; height: 300px; background: red; }
 #makeMeDraggable.ui-draggable-dragging { background: green; }
-.seat { width: 50px; height: 50px; background:lightgrey; border:2px solid darkgrey }
+.studentseat { width: 50px; height: 50px; background:lightgrey; border:2px solid darkgrey }
 .student { width: 50px; height: 50px; background:lightblue; border:2px solid darkblue }
 #seatPile div.hovered {
   background: #aaa;
 }
 </style>
     <script type="text/javascript">
-console.log("begin");
+	console.log("begin");
 	var students = new Array();
-		
+    students[0] = new Array("Sharmeen Ahmed", "123456");
+    students[1] = new Array("Stephany Arzaga", "987654");
+    	
     $( init );
 
     function init() {
+        console.log("init");
     	$('#successMessage').hide();
     	  $('#successMessage').css( {
     	    left: '580px',
@@ -31,11 +34,13 @@ console.log("begin");
 		//$('#seatPile').html('');
 		//$('#studentSlots').html('');
 
-		var numSeats=2;
+		//var numSeats=20;
+		var numSeats=$("[id^='studentseat']").length;
+		//console.log("numSeats: " + numSeats);
 		
 		for(var i=1; i <= numSeats; i++) {
-			console.warn("i=" + numSeats);
-			$('#seat' + i).droppable( {
+			//console.warn("i=" + numSeats);
+			$('#studentseat' + i).droppable( {
 				accept: '#studentSlots div',
 				hoverClass: 'hovered',
 				drop: handleDropEvent
@@ -48,17 +53,16 @@ console.log("begin");
 			    value: ''
 			}).appendTo('#seatingChartForm');
 		}
+		//alert("num hidden ele: " + $('#seatingChartForm input:hidden').length);
+        
 
-        //alert("num hidden ele: " + $('#seatingChartForm input:hidden').length);
-        // 
-	    students[0] = new Array("Sharmeen Ahmed", "123456");
-	    students[1] = new Array("Stephany Arzaga", "987654");
-
-	    $('<div id="' + students[0][1] + '" class="student">' + students[0][0] + '</div>').appendTo('#studentSlots').draggable({
-			containment:'#content',
-			cursor:'move',
-			revert:'invalid'
-		});
+	    for(i=0;i<students.length;i++){
+	    	$('<div id="' + students[i][1] + '" class="student">' + students[i][0] + '</div>').appendTo('#studentSlots').draggable({
+				containment:'#content',
+				cursor:'move',
+				revert:'invalid'
+			});
+	    }
 	    
     } //init
 
@@ -115,8 +119,8 @@ console.log("begin");
 
 <div id="content" style="height: 400px; border: 1px solid black;">
 <div id="seatPile" style="border:1px red dashed">
-	<div id="seat1" class="ui-widget-header"><p>drop here</p></div>
-	<div id="seat2" class="ui-widget-header"><p>drop here</p></div>
+	<div id="studentseat1" class="ui-widget-header"><p>drop here</p></div>
+	<div id="studentseat2" class="ui-widget-header"><p>drop here</p></div>
 </div>
 <br/><br/>
 <div id="studentSlots"></div>
@@ -129,7 +133,7 @@ console.log("begin");
 	<!--  todo: interate of num of seats -->
 	<%--<input type="hidden" id="seatingchartseat1" value="wee"/>
 	<input type="hidden" id="seatingchartseat2" value="wee"/>
---%></form>    
+--%></form>
           <r:layoutResources/>
         </body>
     </html>
